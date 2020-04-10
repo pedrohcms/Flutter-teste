@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapp/reset-password.page.dart';
 import 'services/Api.dart';
@@ -10,6 +11,25 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailFieldController = TextEditingController();
   final passwordFieldController = TextEditingController();
+
+  Future<void> _showDialogBox() async {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext contex) {
+          return AlertDialog(
+            title: Text("Usuário não encontrado"),
+            content: Text("Usuário não está cadastrado ou credenciais erradas"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,10 +146,14 @@ class _LoginPageState extends State<LoginPage> {
                         print(
                             "The error was:" + Api.content["error"].toString());
                       } else {
-                        if (Api.content["status"] == 200) {
-                          print("User find");
+                        if (Api.content.containsKey("token")) {
+                          Navigator.of(context).popAndPushNamed('/user_page',
+                              arguments: {
+                                "email": emailFieldController.text,
+                                "token": Api.content["token"]
+                              });
                         } else {
-                          print("User not find");
+                          _showDialogBox();
                         }
                       }
                     }),

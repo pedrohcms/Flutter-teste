@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Api {
-  static final String baseURL = 'http://192.168.15.4/api/v1';
+  static final String baseURL = 'http://192.168.15.8:3333/api/v1';
   static Map content;
 
   static Future<void> sendRequest(String method, String endpoint,
@@ -12,7 +12,7 @@ class Api {
     try {
       switch (method) {
         case 'GET':
-          response = await http.get('$baseURL' + endpoint);
+          response = await http.get('$baseURL' + endpoint, headers: headers);
           Api.content = jsonDecode(response.body);
 
           break;
